@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+      <h2>Welcome, <span id="userDisplay">User</span>!</h2>
+      <form id="expenseForm">
+        <label for="rent">Rent</label>
+        <input type="number" id="rent" placeholder="₹" required>
+  
+        <label for="electric">Electric Bill</label>
+        <input type="number" id="electric" placeholder="₹" required>
+  
+        <label for="food">Food Cost</label>
+        <input type="number" id="food" placeholder="₹" required>
+  
+        <label for="travel">Travel Cost</label>
+        <input type="number" id="travel" placeholder="₹" required>
+  
+        <label for="daily">Daily Need Element Cost</label>
+        <input type="number" id="daily" placeholder="₹" required>
+  
+        <label for="others">Others Cost</label>
+        <input type="number" id="others" placeholder="₹">
+  
+        <button type="submit">Save Expenses</button>
+      </form>
+      <div class="success" id="successMsg"></div>
+    </div>
+  
+    
+
+
+<script>
+  document.getElementById("userDisplay").textContent = localStorage.getItem("username") || "Guest";
+</script>
+  </body>
+</html>
