@@ -1,0 +1,15 @@
+/* Page opening animation */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#content.page-animate {
+  animation: pageFadeIn 1s cubic-bezier(.4,0,.2,1);
+}
