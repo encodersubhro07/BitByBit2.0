@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAVEMATE • Smart Spending. Smarter Saving.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0c0d10;
+      --card:#12141a;
+      --muted:#1a1d25;
+      --primary:#7dd3fc;       /* sky-300 */
+      --primary-2:#22d3ee;     /* cyan-400 */
+      --accent:#a78bfa;        /* violet-300 */
+      --text:#e5e7eb;          /* gray-200 */
+      --text-dim:#9ca3af;      /* gray-400 */
+      --danger:#fb7185;        /* rose-400 */
+      --success:#86efac;       /* green-300 */
+      --warning:#fde68a;       /* amber-200 */
+      --shadow: 0 20px 40px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; 
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(34,211,238,.15), transparent 60%),
+                  radial-gradient(1000px 600px at -10% 0%, rgba(167,139,250,.14), transparent 60%),
+                  var(--bg);
+      color:var(--text); line-height:1.6;
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1100px; margin:0 auto; padding:0 20px}
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(12,13,16,.85), rgba(12,13,16,.55));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.3px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; 
+      background:linear-gradient(120deg, rgba(34,211,238,.12), rgba(167,139,250,.12));
+      border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--text-dim)}
+    .pill-btn{
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px; 
+      background:linear-gradient(120deg, rgba(125,211,252,.15), rgba(167,139,250,.15));
+      border:1px solid rgba(255,255,255,.08); color:var(--text); cursor:pointer; font-weight:600;
+      box-shadow: var(--shadow);
+    }
+    nav ul{display:flex; gap:18px; list-style:none; padding:0; margin:0}
+    nav a{padding:8px 12px; border-radius:10px; color:var(--text-dim)}
+    nav a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+
+    /* Hero */
+    .hero{padding:60px 0 40px}
+    .hero .wrap{display:grid; grid-template-columns:1.2fr .8fr; gap:28px; align-items:center}
+    .title{font-size:46px; line-height:1.15; margin:10px 0 12px; font-weight:900}
+    .subtitle{font-size:18px; color:var(--text-dim)}
+    .cta{display:flex; gap:12px; margin-top:18px}
+    .card{
+      background:linear-gradient(180deg, rgba(26,29,37,.85), rgba(18,20,26,.9));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius); padding:18px; box-shadow: var(--shadow);
+    }
+    .hero-visual{height:320px; border-radius:var(--radius); position:relative; overflow:hidden}
+    .glow{position:absolute; inset:-40%; background: radial-gradient( circle at 70% 20%, rgba(34,211,238,.25), transparent 40%),
+                                      radial-gradient( circle at 30% 80%, rgba(167,139,250,.22), transparent 40%)}
+    .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
+    .kpi{padding:14px; border-radius:14px; background:var(--muted); border:1px solid rgba(255,255,255,.06)}
+    .kpi b{font-size:18px}
+
+    section{padding:54px 0}
+    section h2{margin:0 0 10px; font-size:28px}
+    section p.lead{color:var(--text-dim); margin:0 0 18px}
+
+    /* Problems */
+    .grid{display:grid; gap:14px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    @media (max-width: 900px){
+      .hero .wrap{grid-template-columns:1fr}
+      .grid.cols-3{grid-template-columns:1fr}
+      .grid.cols-2{grid-template-columns:1fr}
+    }
+
+    /* Carousel */
+    .carousel{position:relative; overflow:hidden; border-radius:var(--radius); border:1px solid rgba(255,255,255,.08); background:var(--card)}
+    .slides{display:flex; transition:transform .5s ease}
+    .slide{min-width:100%; padding:20px}
+    .dots{display:flex; gap:8px; justify-content:center; margin-top:10px}
+    .dot{width:10px; height:10px; border-radius:50%; background:#2a2f3a; border:1px solid rgba(255,255,255,.08); cursor:pointer}
+    .dot.active{background:linear-gradient(120deg, var(--primary), var(--accent))}
+
+    /* Panels */
+    .panel{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+    @media (max-width: 900px){ .panel{grid-template-columns: 1fr} }
+
+    /* Forms */
+    label{display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px}
+    input,select,textarea{width:100%; padding:12px 12px; border-radius:12px; background:#0f1116; border:1px solid #262a33; color:var(--text)}
+    input:focus,select:focus,textarea:focus{outline:none; border-color:var(--primary)}
+    .btn{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.12); cursor:pointer; background:linear-gradient(120deg, rgba(125,211,252,.16), rgba(167,139,250,.16)); color:var(--text); font-weight:600}
+    .btn.ghost{background:transparent}
+    .btn.danger{background: rgba(251, 113, 133, .15); border-color: rgba(251, 113, 133, .35)}
+
+    table{width:100%; border-collapse:collapse; font-size:14px}
+    th,td{padding:10px 12px; border-bottom:1px dashed rgba(255,255,255,.07)}
+    th{color:var(--text-dim); font-weight:600; text-align:left}
+
+    /* Sticky float tips */
+    .toast{position:fixed; right:16px; bottom:16px; background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:12px 14px; box-shadow: var(--shadow); display:none}
+
+    /* Chatbot */
+    .chat{height:320px; overflow:auto; padding:12px; border-radius:14px; background:var(--muted); border:1px solid rgba(255,255,255,.06)}
+    .msg{margin:8px 0; display:flex; gap:10px}
+    .msg.user{justify-content:flex-end}
+    .bubble{max-width:68%; padding:10px 12px; border-radius:12px; background:#0f1116; border:1px solid #262a33}
+    .msg.user .bubble{background:linear-gradient(120deg, rgba(125,211,252,.16), rgba(167,139,250,.16));}
+
+    footer{padding:32px 0 64px; color:var(--text-dim)}
+    .footgrid{display:grid; grid-template-columns:2fr 1fr 1fr; gap:20px}
+    @media (max-width: 900px){ .footgrid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span style="font-size:22px">💠</span> SAVEMATE</div>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#problems">Problems</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#wallet">SaveSphere</a></li>
+          <li><a href="#tracker">Tracker</a></li>
+          <li><a href="#chat">AI Tips</a></li>
+          <li><a href="#vision">Vision</a></li>
+        </ul>
+      </nav>
+      <button class="pill-btn" id="getStartedTop">🚀 Get Started</button>
+    </div>
+  </header>
+
+  <main id="home" class="hero">
+    <div class="container wrap">
+      <div>
+        <span class="badge">Empowering you to master your money, effortlessly</span>
+        <h1 class="title">Smart Spending. <span style="background:linear-gradient(120deg, var(--primary), var(--accent)); -webkit-background-clip:text; background-clip:text; color:transparent">Smarter Saving.</span></h1>
+        <p class="subtitle">SAVEMATE is an intelligent, India-first money coach that simplifies tracking, budgeting, and saving — in a friendly, local way.</p>
+        <div class="cta">
+          <button class="pill-btn" id="scrollToWallet">💰 Try SaveSphere</button>
+          <button class="pill-btn" id="scrollToTracker">📒 Add an Expense</button>
+          <button class="pill-btn" id="scrollToChat">🤖 Get AI Tip</button>
+        </div>
+        <div class="kpis">
+          <div class="kpi">💳 <b id="kpiTransactions">0</b><br><span class="sm">Transactions tracked</span></div>
+          <div class="kpi">🎯 <b id="kpiGoals">0</b><br><span class="sm">Active goals</span></div>
+          <div class="kpi">💸 <b id="kpiSaved">₹0</b><br><span class="sm">Saved this month</span></div>
+        </div>
+      </div>
+      <div class="card hero-visual">
+        <div class="glow"></div>
+        <div class="container" style="position:absolute; inset:12px;">
+          <h3 style="margin:10px 0 2px">SaveSphere Snapshot</h3>
+          <p class="lead">Create wallets, set targets, and watch progress grow.</p>
+          <div id="heroProgress" class="grid cols-3">
+            <!-- dynamic goal chips -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section id="problems">
+    <div class="container">
+      <h2>Why this matters — The Problems</h2>
+      <p class="lead">Based on the deck: lack of visibility, small overspends, and no real-time insights make saving hard — especially for students and early jobbers.</p>
+      <div class="grid cols-3">
+        <div class="card">🧩 <b>The Struggle is Real</b><br><span class="sm">Middle & lower-middle class often struggle to save despite regular income.</span></div>
+        <div class="card">🧾 <b>Where Does My Money Go?</b><br><span class="sm">Small daily spends add up; tracking is tedious.</span></div>
+        <div class="card">⏱️ <b>No Real-Time Insights</b><br><span class="sm">Hard to know if you’re on track until it’s too late.</span></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        🎯 <b>Target Audience</b><br>
+        <span class="sm">18–35 (students, early career, small business), smartphone users in urban & semi-urban India with goals like vacations, gadgets, education, emergency funds.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <h2>Key Features</h2>
+      <p class="lead">AI tips, projections, simple interface, and motivational nudges. Local-language friendly.</p>
+      <div class="carousel" aria-label="Feature carousel">
+        <div class="slides" id="featureSlides">
+          <div class="slide">
+            <div class="panel">
+              <div class="card">
+                <h3>💡 Personalized Insights</h3>
+                <p>Understand your spending patterns. We group transactions and surface actions you can take this week.</p>
+                <ul>
+                  <li>Top 3 spend categories</li>
+                  <li>Weekly trend vs. last month</li>
+                  <li>One action to save ₹200–₹500</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>📈 Projections</h3>
+                <p>Month-end and year-end savings estimates based on your current pace.</p>
+                <div id="projectionBox"></div>
+              </div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="panel">
+              <div class="card">
+                <h3>🔔 Budget Alerts</h3>
+                <p>Set a monthly budget and we’ll nudge you when categories heat up.</p>
+                <div class="grid cols-2">
+                  <div>
+                    <label>Monthly Budget (₹)</label>
+                    <input id="budgetInput" type="number" min="0" placeholder="e.g., 15000">
+                  </div>
+                  <div>
+                    <label>Alert at % of budget</label>
+                    <input id="alertPct" type="number" min="10" max="100" value="80">
+                  </div>
+                </div>
+                <div style="margin-top:10px">
+                  <button class="btn" id="saveBudget">Save Budget</button>
+                  <span id="budgetStatus" class="sm" style="margin-left:8px; color:var(--text-dim)"></span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>🗣️ Hinglish UX</h3>
+                <p>Simple words, India-first interface. “Aaj ka kharcha”, “Kal ka goal”, “Chhoti bachat, bada fayda”.</p>
+              </div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="panel">
+              <div class="card">
+                <h3>⚡ Motivational Nudges</h3>
+                <p>Micro-reminders keep you consistent. Get a gentle push when you skip saving days.</p>
+                <button class="btn" id="demoNudge">Demo Nudge</button>
+              </div>
+              <div class="card">
+                <h3>🔒 Privacy by Design</h3>
+                <p>All data stays on your device in this prototype (LocalStorage). No servers attached.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dots" id="featureDots" aria-label="Feature dots"></div>
+    </div>
+  </section>
+
+  <section id="wallet">
+    <div class="container">
+      <h2>Introducing <span style="color:var(--primary)">SaveSphere</span> — Multi-Goal Wallets</h2>
+      <p class="lead">Create separate wallets for different saving goals. Add deposits and watch progress.</p>
+      <div class="panel">
+        <div class="card">
+          <h3>Create Goal</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Goal name</label>
+              <input id="goalName" placeholder="e.g., New Phone" />
+            </div>
+            <div>
+              <label>Target Amount (₹)</label>
+              <input id="goalTarget" type="number" min="0" placeholder="e.g., 20000" />
+            </div>
+          </div>
+          <div class="grid cols-2" style="margin-top:10px">
+            <div>
+              <label>Daily Reminder? (optional)</label>
+              <select id="goalReminder">
+                <option value="off">Off</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+            <div style="display:flex; align-items:flex-end">
+              <button class="btn" id="addGoal">➕ Add Goal</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>My Goals</h3>
+          <div id="goalList" class="grid cols-2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tracker">
+    <div class="container">
+      <h2>Track Income & Expenses</h2>
+      <p class="lead">Add transactions and categorize them. We’ll total it up and warn you when you’re near your budget.</p>
+      <div class="panel">
+        <div class="card">
+          <h3>Add Transaction</h3>
+          <div class="grid cols-2">
+            <div>
+              <label>Type</label>
+              <select id="txType">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+            <div>
+              <label>Category</label>
+              <select id="txCategory">
+                <option>Food</option>
+                <option>Transport</option>
+                <option>Bills</option>
+                <option>Shopping</option>
+                <option>Entertainment</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid cols-2" style="margin-top:10px">
+            <div>
+              <label>Amount (₹)</label>
+              <input id="txAmount" type="number" min="0" placeholder="e.g., 250" />
+            </div>
+            <div>
+              <label>Note</label>
+              <input id="txNote" placeholder="e.g., chai & samosa" />
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <button class="btn" id="addTx">➕ Add</button>
+            <button class="btn ghost" id="clearTx">🧹 Clear All</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Summary</h3>
+          <div class="grid cols-3">
+            <div class="kpi">Income<br><b id="sumIncome">₹0</b></div>
+            <div class="kpi">Expenses<br><b id="sumExpense">₹0</b></div>
+            <div class="kpi">Balance<br><b id="sumBalance">₹0</b></div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="badge" id="budgetBadge">No budget set</div>
+          </div>
+          <div style="margin-top:12px; max-height:220px; overflow:auto">
+            <table id="txTable">
+              <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chat">
+    <div class="container">
+      <h2>AI Tips (Prototype)</h2>
+      <p class="lead">A lightweight mock of the chatbot that gives finance tips based on your recent data.</p>
+      <div class="panel">
+        <div class="card">
+          <div class="chat" id="chatBox" aria-live="polite"></div>
+          <div style="display:flex; gap:10px; margin-top:10px">
+            <input id="chatInput" placeholder="Ask: How can I save more on food?">
+            <button class="btn" id="sendChat">Send</button>
+            <button class="btn ghost" id="seedTips">Suggest Tip</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>How it works (in this demo)</h3>
+          <ul>
+            <li>Reads your latest transactions (local only)</li>
+            <li>Finds your top spend category</li>
+            <li>Returns a contextual, India-first saving tip</li>
+          </ul>
+          <p class="sm" style="color:var(--text-dim)">This is a placeholder. In a real app, this connects to an AI backend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vision">
+    <div class="container">
+      <h2>Vision & Next Steps</h2>
+      <div class="grid cols-3">
+        <div class="card">🌏 <b>Localized for India</b><br><span class="sm">INR-first, Hinglish UX, culturally familiar categories.</span></div>
+        <div class="card">🆓 <b>Freemium Rollout</b><br><span class="sm">Free basics for mass adoption; optional upgrades later.</span></div>
+        <div class="card">🧪 <b>Beta Plan</b><br><span class="sm">Build MVP → Test with 100–200 users → Iterate → Launch.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footgrid">
+      <div>
+        <div class="brand"><span style="font-size:22px">💠</span> SAVEMATE</div>
+        <p class="sm">© <span id="year"></span> SaveMate Prototype. No data leaves your device in this demo.</p>
+      </div>
+      <div>
+        <b>Quick Links</b>
+        <div><a href="#wallet">SaveSphere</a></div>
+        <div><a href="#tracker">Tracker</a></div>
+        <div><a href="#chat">AI Tips</a></div>
+      </div>
+      <div>
+        <b>Contact</b>
+        <div class="sm">team@savemate.demo</div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // =============== UTIL & STATE =================
+    const $ = (s,root=document)=> root.querySelector(s)
+    const $$ = (s,root=document)=> [...root.querySelectorAll(s)]
+
+    const state = {
+      goals: JSON.parse(localStorage.getItem('sm_goals')||'[]'),
+      tx: JSON.parse(localStorage.getItem('sm_tx')||'[]'),
+      budget: JSON.parse(localStorage.getItem('sm_budget')||'null'),
+    }
+
+    function save(){
+      localStorage.setItem('sm_goals', JSON.stringify(state.goals))
+      localStorage.setItem('sm_tx', JSON.stringify(state.tx))
+      localStorage.setItem('sm_budget', JSON.stringify(state.budget))
+      render()
+    }
+
+    function rupees(n){
+      n = Number(n||0)
+      return '₹' + n.toLocaleString('en-IN')
+    }
+
+    function toast(msg, kind='info'){
+      const t = $('#toast')
+      t.textContent = msg
+      t.style.borderColor = kind==='warn'? 'rgba(253, 230, 138, .4)': kind==='danger'? 'rgba(251, 113, 133, .4)': 'rgba(125,211,252,.35)'
+      t.style.display = 'block'
+      setTimeout(()=> t.style.display='none', 2600)
+    }
+
+    // =============== NAV SCROLL CTAS ================
+    $('#getStartedTop').onclick = () => document.getElementById('wallet').scrollIntoView({behavior:'smooth'})
+    $('#scrollToWallet').onclick = () => document.getElementById('wallet').scrollIntoView({behavior:'smooth'})
+    $('#scrollToTracker').onclick = () => document.getElementById('tracker').scrollIntoView({behavior:'smooth'})
+    $('#scrollToChat').onclick = () => document.getElementById('chat').scrollIntoView({behavior:'smooth'})
+
+    // =============== CAROUSEL ========================
+    const slides = $('#featureSlides')
+    const dots = $('#featureDots')
+    let idx = 0
+    function mountDots(){
+      dots.innerHTML = ''
+      const count = $$('.slide', slides).length
+      for(let i=0;i<count;i++){
+        const d=document.createElement('button'); d.className='dot'; d.ariaLabel = 'Go to slide '+(i+1)
+        d.onclick=()=> go(i)
+        dots.appendChild(d)
+      }
+      updateDots()
+    }
+    function go(i){ idx=i; slides.style.transform = `translateX(-${i*100}%)`; updateDots() }
+    function updateDots(){ $$('.dot', dots).forEach((d,i)=> d.classList.toggle('active', i===idx)) }
+    mountDots()
+    setInterval(()=>{ idx=(idx+1)%$$('.slide',slides).length; go(idx) }, 6000)
+
+    // =============== GOALS (SaveSphere) ==============
+    $('#addGoal').onclick = () => {
+      const name = $('#goalName').value.trim()
+      const target = Number($('#goalTarget').value)
+      const reminder = $('#goalReminder').value
+      if(!name || !target || target <= 0) return toast('Enter a goal and target amount', 'warn')
+      state.goals.push({id:crypto.randomUUID(), name, target, saved:0, reminder})
+      $('#goalName').value=''; $('#goalTarget').value=''
+      save(); toast('Goal added ✅')
+    }
+
+    function goalCard(g){
+      const pct = Math.min(100, Math.round((g.saved / Math.max(1,g.target))*100))
+      return `
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px">
+            <b>${g.name}</b>
+            <button class="btn ghost" data-del="${g.id}">🗑️</button>
+          </div>
+          <div class="sm" style="color:var(--text-dim)">Target: ${rupees(g.target)} • Saved: <b>${rupees(g.saved)}</b> • ${pct}%</div>
+          <div style="margin:10px 0; height:10px; border-radius:999px; background:#0f1116; border:1px solid #262a33; overflow:hidden">
+            <div style="height:100%; width:${pct}%; background: linear-gradient(90deg, var(--primary), var(--accent))"></div>
+          </div>
+          <div class="grid cols-2">
+            <input type="number" min="0" placeholder="Add deposit (₹)" data-add="${g.id}">
+            <button class="btn" data-addbtn="${g.id}">➕ Save</button>
+          </div>
+        </div>`
+    }
+
+    function onGoalListClick(e){
+      const del = e.target.closest('[data-del]')?.getAttribute('data-del')
+      const addBtn = e.target.closest('[data-addbtn]')?.getAttribute('data-addbtn')
+      if(del){ state.goals = state.goals.filter(x=>x.id!==del); save(); toast('Goal removed') }
+      if(addBtn){
+        const input = $(`[data-add="${addBtn}"]`, $('#goalList'))
+        const amt = Number(input.value)
+        if(!amt || amt<=0) return toast('Enter a valid deposit', 'warn')
+        const g = state.goals.find(x=>x.id===addBtn)
+        g.saved += amt
+        save(); toast('Saved to goal 💸')
+      }
+    }
+    $('#goalList').addEventListener('click', onGoalListClick)
+
+    // =============== TRACKER =========================
+    $('#addTx').onclick = () => {
+      const type = $('#txType').value
+      const cat = $('#txCategory').value
+      const amt = Number($('#txAmount').value)
+      const note = $('#txNote').value.trim()
+      if(!amt || amt<=0) return toast('Enter a valid amount', 'warn')
+      state.tx.unshift({id:crypto.randomUUID(), date:new Date().toISOString(), type, cat, amt, note})
+      $('#txAmount').value=''; $('#txNote').value=''
+      save(); toast('Transaction added ✅')
+    }
+    $('#clearTx').onclick = () => { if(confirm('Clear all transactions?')){ state.tx=[]; save(); toast('Cleared') } }
+
+    function renderTx(){
+      const tbody = $('#txTable tbody'); tbody.innerHTML=''
+      for(const t of state.tx){
+        const tr = document.createElement('tr')
+        const dt = new Date(t.date)
+        tr.innerHTML = `<td>${dt.toLocaleDateString()} ${dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>
+                        <td>${t.type}</td><td>${t.cat}</td><td>${rupees(t.amt)}</td><td>${t.note||''}</td>
+                        <td><button class='btn danger' data-del-tx='${t.id}'>Delete</button></td>`
+        tbody.appendChild(tr)
+      }
+      tbody.onclick = (e)=>{
+        const id = e.target.closest('[data-del-tx]')?.getAttribute('data-del-tx')
+        if(id){ state.tx = state.tx.filter(x=>x.id!==id); save() }
+      }
+
+      const income = state.tx.filter(t=>t.type==='income').reduce((a,b)=>a+b.amt,0)
+      const expense = state.tx.filter(t=>t.type==='expense').reduce((a,b)=>a+b.amt,0)
+      $('#sumIncome').textContent = rupees(income)
+      $('#sumExpense').textContent = rupees(expense)
+      $('#sumBalance').textContent = rupees(income-expense)
+
+      // KPIs
+      $('#kpiTransactions').textContent = state.tx.length
+      const savedThisMonth = state.tx.filter(t=> t.type==='income' && new Date(t.date).getMonth()===new Date().getMonth())
+        .reduce((a,b)=>a+b.amt,0) - state.tx.filter(t=> t.type==='expense' && new Date(t.date).getMonth()===new Date().getMonth())
+        .reduce((a,b)=>a+b.amt,0)
+      $('#kpiSaved').textContent = rupees(Math.max(0, savedThisMonth))
+
+      // Budget alert
+      if(state.budget){
+        const pct = Math.round((expense / Math.max(1,state.budget.amount))*100)
+        $('#budgetBadge').textContent = `Budget: ${rupees(state.budget.amount)} • Used ${pct}%`
+        if(pct >= state.budget.alertPct){ toast(`⚠️ You\'ve used ${pct}% of your budget`, 'warn') }
+      } else {
+        $('#budgetBadge').textContent = 'No budget set'
+      }
+
+      // Projections box
+      const days = new Date().getDate()
+      const dailyBurn = expense / Math.max(1, days)
+      const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate()
+      const projected = Math.round(dailyBurn * daysInMonth)
+      $('#projectionBox').innerHTML = `<div class='kpi'>Projected month-end spend: <b>${rupees(projected)}</b><br><span class='sm'>Based on current daily average</span></div>`
+
+      // Chat context
+      updateHeroChips()
+    }
+
+    // =============== BUDGET ==========================
+    $('#saveBudget').onclick = () => {
+      const amount = Number($('#budgetInput').value)
+      const alertPct = Number($('#alertPct').value)
+      if(!amount || amount <= 0) return toast('Enter a valid budget', 'warn')
+      state.budget = { amount, alertPct: Math.min(100, Math.max(10, alertPct)) }
+      save(); $('#budgetStatus').textContent = 'Saved ✓'
+    }
+
+    // =============== HERO CHIPS ======================
+    function updateHeroChips(){
+      $('#kpiGoals').textContent = state.goals.length
+      const hero = $('#heroProgress'); hero.innerHTML=''
+      for(const g of state.goals.slice(0,3)){
+        const pct = Math.min(100, Math.round((g.saved / Math.max(1,g.target))*100))
+        const chip = document.createElement('div'); chip.className='kpi'
+        chip.innerHTML = `🎯 ${g.name}<br><b>${pct}%</b>`
+        hero.appendChild(chip)
+      }
+    }
+
+    // =============== NUDGES ==========================
+    $('#demoNudge').onclick = () => toast('Don\'t skip today\'s ₹100 save – chhoti bachat, bada fayda! 💪', 'info')
+
+    // =============== CHATBOT (Mock) ==================
+    const chatBox = $('#chatBox')
+    function pushMsg(text, who='bot'){
+      const row = document.createElement('div'); row.className = 'msg ' + (who==='user'?'user':'bot')
+      const bubble = document.createElement('div'); bubble.className='bubble'; bubble.textContent=text
+      row.appendChild(bubble); chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight
+    }
+
+    function topCategory(){
+      const agg = {}
+      for(const t of state.tx.filter(t=>t.type==='expense')) agg[t.cat] = (agg[t.cat]||0) + t.amt
+      let maxC=null, maxV=0
+      for(const [c,v] of Object.entries(agg)) if(v>maxV){ maxV=v; maxC=c }
+      return maxC
+    }
+
+    function contextualTip(){
+      const c = topCategory()
+      const tips = {
+        'Food': [
+          'Try a weekly meal plan and carry snacks; reduce impulse Zomato/Swiggy orders by 2 this week. Save ₹300–₹500.',
+          'Switch one café coffee to home-brew for 5 days. Potential save: ₹600.'/1
+        ],
+        'Transport': [
+          'Batch errands into one trip and use shared rides/metro twice this week to save ₹150–₹300.',
+          'Track fuel efficiency; keep tires properly inflated – can save 3–5% on fuel.'
+        ],
+        'Bills': [
+          'Audit subscriptions. Pause the least-used one for a month – instant save ₹199–₹499.',
+          'Enable bill reminders to avoid late fees. That\'s a silent leak.'
+        ],
+        'Shopping': [
+          '24-hour rule before non-essentials. Add to wishlist; buy only if still needed tomorrow.',
+          'Set a monthly cap and use cash/envelope for discretionary spends.'
+        ],
+        'Entertainment': [
+          'Swap 1 movie night out with a home watch party this weekend. Save on tickets & snacks.',
+          'Use student/off-peak discounts where possible.'
+        ],
+        'Other': [
+          'Round-up savings: every time you spend, move ₹10–₹50 to a goal wallet.',
+          'Micro-challenge: No-spend day once a week. Track streaks!'
+        ]
+      }
+      const pool = tips[c||'Other']
+      return pool[Math.floor(Math.random()*pool.length)]
+    }
+
+    $('#sendChat').onclick = () => {
+      const q = $('#chatInput').value.trim(); if(!q) return
+      $('#chatInput').value=''; pushMsg(q, 'user')
+      setTimeout(()=>{
+        pushMsg('Here\'s a quick idea: ' + contextualTip())
+      }, 300)
+    }
+    $('#seedTips').onclick = () => pushMsg(contextualTip())
+
+    // =============== INITIAL RENDER ==================
+    function render(){
+      renderTx(); updateHeroChips()
+      const list = $('#goalList'); list.innerHTML = state.goals.map(goalCard).join('')
+    }
+
+    // Year
+    $('#year').textContent = new Date().getFullYear()
+
+    // Boot
+    render()
+  </script>
+</body>
+</html>
